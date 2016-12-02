@@ -1,6 +1,6 @@
 {
   "name": "express-api-problem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimal package to assist in returning RESTful exceptions in your APIs",
   "main": "index.js",
   "repository": {
