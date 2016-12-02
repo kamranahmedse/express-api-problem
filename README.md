@@ -66,6 +66,7 @@ throw new ApiProblem(400);
 Providing description string
 ```javascript
 throw new ApiProblem(404, 'User not found', 'No user found against the given ID: 10');
+
 // {
 //    status: 404,
 //    title: 'User not found',
@@ -74,11 +75,13 @@ throw new ApiProblem(404, 'User not found', 'No user found against the given ID:
 // }
 ````
 Using object in description
+
 ```javascript
 throw new ApiProblem(400, 'Validation failed', {
     name: 'Name field is required',
     email: 'Invalid email given'
 });
+
 // {
 //    status: 422,
 //    title: 'Unprocessable entity',
