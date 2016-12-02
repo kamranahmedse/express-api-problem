@@ -24,9 +24,8 @@ Where
 
 ## Installation
 
-
 ```
-yarn add kamranahmedse/express-api-problem
+yarn add express-api-problem
 ```
 
 
