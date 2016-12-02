@@ -7,6 +7,16 @@
     "url": "http://github.com/kamranahmedse/express-faulty",
     "type": "git"
   },
+  "keywords": [
+    "exceptions",
+    "exception",
+    "errors",
+    "error",
+    "whoops",
+    "laravel faulty",
+    "api problem",
+    "exception handler"
+  ],
   "author": "Kamran Ahmed <kamranahmed.se@gmail.com>",
   "license": "MIT"
 }
