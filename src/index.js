@@ -1,7 +1,7 @@
 var httpStatus = require('http-status-codes');
 var util = require('util');
 
-function ApiProblem(statusCode, title, description, type, additional) {
+function ApiProblem(statusCode, title, description, additional) {
 
   additional = additional || {};
 
