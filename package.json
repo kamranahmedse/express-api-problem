@@ -2,7 +2,7 @@
   "name": "express-api-problem",
   "version": "1.0.0",
   "description": "A minimal package to assist in returning RESTful exceptions in your APIs",
-  "main": "src/index.js",
+  "main": "index.js",
   "repository": {
     "url": "http://github.com/kamranahmedse/express-faulty",
     "type": "git"
@@ -18,5 +18,8 @@
     "exception handler"
   ],
   "author": "Kamran Ahmed <kamranahmed.se@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "http-status-codes": "^1.0.6"
+  }
 }
