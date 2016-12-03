@@ -2,9 +2,7 @@
 
 > Automatically turns your thrown exceptions to the JSON response while conforming to API problem specification
 
-An express package that lets you handle the API problems with ease.
-
-Faulty provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your exceptions to be returned in the below format with the content type of `application/problem+json`
+An express package that lets you handle the API problems with ease. It provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your thown exceptions to be returned in the below format with the header of content type set to `application/problem+json`
 
 ```json
 {
