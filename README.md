@@ -57,7 +57,7 @@ Throwing exception using only status code
 throw new ApiProblem(400);
 
 // {
-//    status: 404,
+//    status: 400,
 //    title: 'Bad Request',
 //    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
@@ -103,7 +103,7 @@ throw new ApiProblem(400, 'Insufficient Balance', 'You do not have enough balanc
 //    title: 'Insufficient Balance',
 //    description: 'You do not have enough balance to purchase the product',
 //    available_balance: 'USD 2000',
-//    'required_balance': 'USD 12422',
+//    required_balance: 'USD 12422',
 //    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
 ```
