@@ -2,9 +2,7 @@
 
 > Automatically turns your thrown exceptions to the JSON response while conforming to API problem specification
 
-An express package that lets you handle the API problems with ease.
-
-Faulty provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your exceptions to be returned in the below format with the content type of `application/problem+json`
+An express package that lets you handle the API problems with ease. It provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your thown exceptions to be returned in the below format with the header of content type set to `application/problem+json`
 
 ```json
 {
@@ -57,7 +55,7 @@ Throwing exception using only status code
 throw new ApiProblem(400);
 
 // {
-//    status: 404,
+//    status: 400,
 //    title: 'Bad Request',
 //    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
@@ -103,7 +101,7 @@ throw new ApiProblem(400, 'Insufficient Balance', 'You do not have enough balanc
 //    title: 'Insufficient Balance',
 //    description: 'You do not have enough balance to purchase the product',
 //    available_balance: 'USD 2000',
-//    'required_balance': 'USD 12422',
+//    required_balance: 'USD 12422',
 //    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
 ```
