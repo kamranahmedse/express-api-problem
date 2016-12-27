@@ -1,6 +1,6 @@
 var ApiProblem = require('./index');
 
-module.exports = function (schema) {
+module.exports = function (schema, options) {
   var validationErrorHandler = function (err, doc, next) {
     if (err && err.name === 'ValidationError') {
       var formattedErrors = [];
@@ -16,7 +16,12 @@ module.exports = function (schema) {
         });
       }
 
-      next(new ApiProblem(422, 'Validation Failed', formattedErrors));
+      next(new ApiProblem(
+        options.status || 422,
+        options.title || 'Validation Failed',
+        formattedErrors
+      ));
+
     } else {
       next(err);
     }
