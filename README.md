@@ -48,6 +48,53 @@ var ApiProblem = require('express-api-problem');
 throw new ApiProblem(statusCode, title, description, additionalDetail);
 ```
 
+Add the mongoose plugin to automatically transform your model validation errors to API Problem
+
+```javascript
+var mongooseValidator = require('express-api-problem/mongoose-validator');
+
+// Will transform any validation exceptions thrown by your model to
+//
+//  {
+//     status: 422,
+//     title: "Validation Failed",
+//     description: [
+//        {
+//          field: "title",
+//          message: "Title must be unique"
+//        },
+//        {
+//          field: "expiryDate",
+//          message: "Expiry Date must be a valid date"
+//        }
+//     ]
+// }
+//
+yourSchema.plugin(mongooseValidator);
+
+// Also you can modify the status code and title if required
+yourSchema.plugin(mongooseValidator, {
+    status: 400,
+    title: "Look before you submit!"
+});
+
+// which will result in
+//  {
+//     status: 400,
+//     title: "Look before you submit!",
+//     description: [
+//        {
+//          field: "title",
+//          message: "Title must be unique"
+//        },
+//        {
+//          field: "expiryDate",
+//          message: "Expiry Date must be a valid date"
+//        }
+//     ]
+// }
+```
+
 ## Examples
 
 Throwing exception using only status code
