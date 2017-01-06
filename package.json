@@ -4,7 +4,7 @@
   "description": "A minimal package to assist in returning RESTful exceptions in your APIs",
   "main": "index.js",
   "repository": {
-    "url": "http://github.com/kamranahmedse/express-faulty",
+    "url": "http://github.com/kamranahmedse/express-api-problem",
     "type": "git"
   },
   "keywords": [
