@@ -1,6 +1,8 @@
 var ApiProblem = require('./index');
 
 module.exports = function (schema, options) {
+  options = options || {};
+
   var validationErrorHandler = function (err, doc, next) {
     if (err && err.name === 'ValidationError') {
       var formattedErrors = [];
