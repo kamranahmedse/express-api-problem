@@ -1,5 +1,5 @@
 import ApiProblem from './api-problem';
-import { ErrorRequestHandler} from 'express-serve-static-core';
+import { ErrorRequestHandler } from 'express-serve-static-core';
 import { NextFunction, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 
@@ -9,7 +9,7 @@ const ProblemMiddleware: ErrorRequestHandler = function (err: any, req: Request,
   if (err instanceof ApiProblem) {
     res.status(err.status)
       .header('Content-Type', contentType)
-      .send(err.toJSON());
+      .send(JSON.stringify(err));
   } else if (err instanceof Error) {
     const error: ApiProblem = new ApiProblem({
       status: INTERNAL_SERVER_ERROR,
@@ -20,7 +20,7 @@ const ProblemMiddleware: ErrorRequestHandler = function (err: any, req: Request,
 
     res.status(error.status)
       .header('Content-Type', contentType)
-      .send(error.toJSON());
+      .send(JSON.stringify(error));
   } else {
     next();
   }

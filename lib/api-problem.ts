@@ -15,23 +15,14 @@ class ApiProblem extends Error implements IApiProblem {
   additional?: Record<string, any>;
   type?: string;
 
-  constructor(props: IApiProblem) {
-    super(props.title);
+  constructor(props: IApiProblem = {}) {
+    super(props.title || 'Server Error');
 
     this.status = props.status || INTERNAL_SERVER_ERROR;
-    this.title = props.title || getStatusText(this.status) || 'Unknown error';
-    this.additional = props.additional;
+    this.title = props.title || getStatusText(this.status);
     this.description = props.description;
-    this.type = props?.additional?.type || 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
-  }
-
-  toJSON(): string {
-    return JSON.stringify({
-      additional: this.additional,
-      description: this.description,
-      status: this.status,
-      title: this.title
-    });
+    this.type = props?.type || 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
+    this.additional = props.additional;
   }
 }
 
