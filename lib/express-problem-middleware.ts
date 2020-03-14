@@ -1,7 +1,7 @@
-import ApiProblem from './api-problem';
-import { ErrorRequestHandler } from 'express-serve-static-core';
-import { NextFunction, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import { NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler } from 'express-serve-static-core';
+import ApiProblem from './api-problem';
 
 const contentType: string = 'application/problem+json';
 

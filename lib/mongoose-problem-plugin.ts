@@ -1,15 +1,17 @@
-import ApiProblem, { IApiProblem } from './api-problem';
-import { Error, MongooseDocument, Schema } from 'mongoose';
-import { UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { MongoError } from 'mongodb';
 import { NextFunction } from 'express';
+import { UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { Error, MongooseDocument, Schema } from 'mongoose';
+import ApiProblem, { IApiProblem } from './api-problem';
 
 export type FormattedErrorType = {
   field: string;
   message: string;
 }
 
-function MongooseProblemPlugin(schema: Schema, options: IApiProblem = {}) {
+type MongoErrorHandler = (err: MongoError, doc: MongooseDocument, next: NextFunction) => void;
+
+export function getErrorHandler(options: IApiProblem = {}): MongoErrorHandler {
   function validationErrorHandler(err: MongoError, doc: MongooseDocument, next: NextFunction): void {
     if (err.name !== 'ValidationError') {
       return next(err);
@@ -29,11 +31,16 @@ function MongooseProblemPlugin(schema: Schema, options: IApiProblem = {}) {
     next(new ApiProblem({
       status: options.status || UNPROCESSABLE_ENTITY,
       title: options.title || 'Validation Failed',
-      additional: formattedErrors
+      ...options,
+      description: formattedErrors
     }));
   }
 
-  schema.post('save', validationErrorHandler);
+  return validationErrorHandler;
+}
+
+function MongooseProblemPlugin(schema: Schema, options: IApiProblem = {}) {
+  schema.post('save', getErrorHandler(options));
 }
 
 export default MongooseProblemPlugin;
