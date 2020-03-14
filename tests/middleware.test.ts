@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import ExpressProblemMiddleware from '../lib/express-problem-middleware';
-import ApiProblem, { IApiProblem } from '../lib/api-problem';
+import ApiProblem, { ApiProblemOptionsType } from '../lib/api-problem';
 
 describe('middleware', () => {
   let res: Response;
@@ -45,12 +45,14 @@ describe('middleware', () => {
     const req: Request = jest.fn() as any;
     const next: NextFunction = jest.fn() as any;
 
-    const problemParams: IApiProblem = {
+    const problemParams: ApiProblemOptionsType = {
       status: 400,
       title: 'Bad Request',
-      description: 'Some bad request',
+      detail: 'Some bad request',
       type: 'Some type',
-      additional: {},
+      additional: {
+        more: 'options to be merged outside',
+      },
     };
 
     ExpressProblemMiddleware()(new ApiProblem(problemParams), req, res, next);
@@ -66,18 +68,23 @@ describe('middleware', () => {
       'application/problem+json',
     );
     expect(resStatus).toHaveBeenCalledWith(400);
-    expect(resJson).toHaveBeenCalledWith(JSON.stringify(problemParams));
+    expect(resJson).toHaveBeenCalledWith(
+      JSON.stringify({
+        ...problemParams,
+        additional: undefined,
+        more: 'options to be merged outside',
+      }),
+    );
   });
 
   it('should respond with API problem response for Error', () => {
     const req: Request = jest.fn() as any;
     const next: NextFunction = jest.fn() as any;
 
-    const problemParams: IApiProblem = {
+    const problemParams: ApiProblemOptionsType = {
       status: 500,
       title: 'Server Error',
-      description: 'Database connection failed',
-      type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
+      detail: 'Database connection failed',
     };
 
     ExpressProblemMiddleware({ stackTrace: false })(
@@ -126,11 +133,6 @@ describe('middleware', () => {
     );
     expect(resJson).toHaveBeenCalledWith(
       expect.stringContaining('Server Error'),
-    );
-    expect(resJson).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
-      ),
     );
     expect(resJson).toHaveBeenCalledWith(expect.stringContaining('500'));
   });

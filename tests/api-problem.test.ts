@@ -1,4 +1,4 @@
-import ApiProblem, { IApiProblem } from '../lib/api-problem';
+import ApiProblem, { ApiProblemOptionsType, SpecErrorType } from '../lib/api-problem';
 
 describe('api-problem', function() {
   it.each([
@@ -25,25 +25,54 @@ describe('api-problem', function() {
       {
         status: 400,
         title: 'An Error',
-        description: 'An Error Occurred',
+        detail: 'An Error Occurred',
         type: 'some error',
-        additional: {
-          instance: 'Additional values with objects',
-        },
+        instance: 'http://some/url',
+      },
+      {
+        status: 400,
+        title: 'An Error',
+        type: 'some error',
+        detail: 'An Error Occurred',
+        instance: 'http://some/url',
       },
     ],
     [
       {
         status: 500,
         title: 'Non existing additional data',
-        description: 'An Error Occurred',
+        detail: 'An Error Occurred',
+        type: 'some error',
+      },
+      {
+        status: 500,
+        title: 'Non existing additional data',
+        detail: 'An Error Occurred',
         type: 'some error',
       },
     ],
-  ])('should be able to stringify errors', (params: IApiProblem) => {
+    [
+      {
+        status: 500,
+        title: 'Non existing additional data',
+        detail: 'An Error Occurred',
+        type: 'some error',
+        additional: {
+          'more': 'nested values',
+        },
+      },
+      {
+        status: 500,
+        title: 'Non existing additional data',
+        detail: 'An Error Occurred',
+        type: 'some error',
+        more: 'nested values',
+      },
+    ],
+  ])('should be able to stringify errors', (params: ApiProblemOptionsType, expected: SpecErrorType) => {
     const problem: ApiProblem = new ApiProblem(params);
 
-    expect(JSON.stringify(problem)).toEqual(JSON.stringify(params));
+    expect(problem).toMatchObject(expected);
   });
 
   it('should assign default values', () => {
@@ -53,8 +82,21 @@ describe('api-problem', function() {
       JSON.stringify({
         status: 500,
         title: 'Server Error',
-        type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
       }),
     );
+  });
+
+  it('can attach additional data to errors', () => {
+    const error = new ApiProblem({
+      status: 400,
+      title: 'Insufficient Balance',
+      detail: 'You do not have enough balance to purchase the product',
+      additional: {
+        available_balance: 'USD 2000',
+        required_balance: 'USD 12422',
+      },
+    });
+
+
   });
 });

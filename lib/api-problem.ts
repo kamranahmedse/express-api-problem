@@ -1,30 +1,34 @@
 import { getStatusText, INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { FormattedErrorType } from './mongoose-problem-plugin';
 
-export interface IApiProblem {
+export type ApiProblemOptionsType = {
   status?: number;
   title?: string;
-  description?: string | FormattedErrorType[];
+  detail?: string | FormattedErrorType[];
+  instance?: string;
   additional?: Record<string, any>;
   type?: string;
 }
 
-class ApiProblem extends Error implements IApiProblem {
+export type SpecErrorType = Omit<ApiProblemOptionsType, 'additional'> & Record<string, any>;
+
+class ApiProblem extends Error {
   status: number;
   title?: string;
-  description?: string | FormattedErrorType[];
-  additional?: Record<string, any>;
+  detail?: string | FormattedErrorType[];
+  instance?: string;
   type?: string;
 
-  constructor(props: IApiProblem = {}) {
+  constructor(props: ApiProblemOptionsType = {}) {
     super(props.title || 'Server Error');
 
     this.status = props.status || INTERNAL_SERVER_ERROR;
     this.title = props.title || getStatusText(this.status);
-    this.description = props.description;
-    this.type =
-      props?.type || 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
-    this.additional = props.additional;
+    this.detail = props.detail;
+    this.instance = props.instance;
+    this.type = props?.type;
+
+    Object.assign(this, props.additional);
   }
 }
 

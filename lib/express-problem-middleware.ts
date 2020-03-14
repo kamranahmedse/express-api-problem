@@ -33,11 +33,11 @@ const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
     if (err instanceof Error) {
       const error: ApiProblem = new ApiProblem({
         status: INTERNAL_SERVER_ERROR,
-        description: err.message,
+        detail: err.message,
         additional: options.stackTrace
           ? {
-              stack: err?.stack || undefined,
-            }
+            stack: err?.stack || undefined,
+          }
           : undefined,
       });
 

@@ -2,7 +2,7 @@
 
 > Automatically turns your thrown exceptions to the JSON response while conforming to API problem specification
 
-An express package that lets you handle the API problems with ease. It provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your thown exceptions to be returned in the below format with the header of content type set to `application/problem+json`
+An express package that lets you handle the API problems with ease. It provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your thrown exceptions to be returned in the below format with the header of content type set to `application/problem+json`
 
 ```json
 {
@@ -25,7 +25,6 @@ Where
 ```
 yarn add express-api-problem
 ```
-
 
 ## Usage
 
@@ -58,7 +57,7 @@ var mongooseValidator = require('express-api-problem/mongoose-validator');
 //  {
 //     status: 422,
 //     title: "Validation Failed",
-//     description: [
+//     detail: [
 //        {
 //          field: "title",
 //          message: "Title must be unique"
@@ -82,7 +81,7 @@ yourSchema.plugin(mongooseValidator, {
 //  {
 //     status: 400,
 //     title: "Look before you submit!",
-//     description: [
+//     detail: [
 //        {
 //          field: "title",
 //          message: "Title must be unique"
@@ -114,7 +113,7 @@ throw new ApiProblem(404, 'User not found', 'No user found against the given ID:
 // {
 //    status: 404,
 //    title: 'User not found',
-//    description: 'No user found against the given ID: 10',
+//    detail: 'No user found against the given ID: 10',
 //    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
 ````
@@ -129,7 +128,7 @@ throw new ApiProblem(400, 'Validation failed', {
 // {
 //    status: 422,
 //    title: 'Unprocessable entity',
-//    description: {
+//    detail: {
 //      name: ..
 //      email: ..
 //    },
@@ -146,7 +145,7 @@ throw new ApiProblem(400, 'Insufficient Balance', 'You do not have enough balanc
 // {
 //    status: 400,
 //    title: 'Insufficient Balance',
-//    description: 'You do not have enough balance to purchase the product',
+//    detail: 'You do not have enough balance to purchase the product',
 //    available_balance: 'USD 2000',
 //    required_balance: 'USD 12422',
 //    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
