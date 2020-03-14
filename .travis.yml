@@ -8,3 +8,5 @@ node_js:
   - "stable"
 before_script:
   - npm install
+after_success:
+  - ./bin/codecov -e TRAVIS_NODE_VERSION -f coverage/*.json

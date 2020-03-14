@@ -1,5 +1,6 @@
 module.exports = {
   testRegex: '.*\.test\.ts$',
+  "rootDir": "./",
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/'
   ],

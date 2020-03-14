@@ -7,7 +7,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc",
-    "test": "NODE_ENV=test jest --coverage && codecov",
+    "test": "NODE_ENV=test jest --coverage",
     "prettier": "prettier --write \"**/*.{ts,json}\""
   },
   "repository": {
