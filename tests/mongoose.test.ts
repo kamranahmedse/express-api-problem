@@ -1,10 +1,7 @@
-import MongooseProblemPlugin, {
-  getErrorHandler,
-} from '../lib/mongoose-problem-plugin';
 import { MongooseDocument, Schema } from 'mongoose';
 import { MongoError } from 'mongodb';
 import { NextFunction } from 'express';
-import ApiProblem from '../lib/api-problem';
+import { ApiProblem, getMongooseErrorHandler, MongooseProblemPlugin } from '../lib';
 
 describe('MongooseProblemPlugin', function() {
   it('should set up the hook to handle validation errors', () => {
@@ -18,7 +15,7 @@ describe('MongooseProblemPlugin', function() {
   });
 
   it('should ignore non-validation errors', () => {
-    const handler = getErrorHandler();
+    const handler = getMongooseErrorHandler();
 
     const error: MongoError = { name: 'non-validation' } as any;
     const doc: MongooseDocument = {} as any;
@@ -31,7 +28,7 @@ describe('MongooseProblemPlugin', function() {
   });
 
   it('should generate api-problem for validation errors', () => {
-    const handler = getErrorHandler();
+    const handler = getMongooseErrorHandler();
 
     const error: MongoError = {
       name: 'ValidationError',

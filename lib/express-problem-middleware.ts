@@ -1,14 +1,14 @@
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { ErrorRequestHandler } from 'express-serve-static-core';
-import ApiProblem from './api-problem';
+import { ApiProblem } from './api-problem';
 
 type MiddlewareOptionsType = { stackTrace?: boolean; contentType?: string };
 type ExpressProblemMiddlewareType = (
   options?: MiddlewareOptionsType,
 ) => ErrorRequestHandler;
 
-const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
+export const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
   options: MiddlewareOptionsType = {},
 ): ErrorRequestHandler {
   // Merge the options with defaults
@@ -36,8 +36,8 @@ const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
         detail: err.message,
         additional: options.stackTrace
           ? {
-            stack: err?.stack || undefined,
-          }
+              stack: err?.stack || undefined,
+            }
           : undefined,
       });
 
@@ -52,5 +52,3 @@ const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
     next();
   };
 };
-
-export default ExpressProblemMiddleware;

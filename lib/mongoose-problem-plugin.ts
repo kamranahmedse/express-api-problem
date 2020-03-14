@@ -2,7 +2,7 @@ import { MongoError } from 'mongodb';
 import { NextFunction } from 'express';
 import { UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { Error, MongooseDocument, Schema } from 'mongoose';
-import ApiProblem, { ApiProblemOptionsType } from './api-problem';
+import { ApiProblem, ApiProblemOptionsType } from './api-problem';
 
 export type FormattedErrorType = {
   field: string;
@@ -15,7 +15,9 @@ type MongoErrorHandler = (
   next: NextFunction,
 ) => void;
 
-export function getErrorHandler(options: ApiProblemOptionsType = {}): MongoErrorHandler {
+export function getMongooseErrorHandler(
+  options: ApiProblemOptionsType = {},
+): MongoErrorHandler {
   function validationErrorHandler(
     err: MongoError,
     doc: MongooseDocument,
@@ -49,8 +51,9 @@ export function getErrorHandler(options: ApiProblemOptionsType = {}): MongoError
   return validationErrorHandler;
 }
 
-function MongooseProblemPlugin(schema: Schema, options: ApiProblemOptionsType = {}) {
-  schema.post('save', getErrorHandler(options));
+export function MongooseProblemPlugin(
+  schema: Schema,
+  options: ApiProblemOptionsType = {},
+) {
+  schema.post('save', getMongooseErrorHandler(options));
 }
-
-export default MongooseProblemPlugin;

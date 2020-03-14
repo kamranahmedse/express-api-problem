@@ -1,4 +1,4 @@
-import ApiProblem, { ApiProblemOptionsType, SpecErrorType } from '../lib/api-problem';
+import { ApiProblem, ApiProblemOptionsType, SpecErrorType } from '../lib';
 
 describe('api-problem', function() {
   it.each([
@@ -97,6 +97,12 @@ describe('api-problem', function() {
       },
     });
 
-
+    expect(JSON.stringify(error)).toEqual(JSON.stringify({
+      status: 400,
+      title: 'Insufficient Balance',
+      detail: 'You do not have enough balance to purchase the product',
+      available_balance: 'USD 2000',
+      required_balance: 'USD 12422',
+    }));
   });
 });

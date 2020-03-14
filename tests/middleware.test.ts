@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import ExpressProblemMiddleware from '../lib/express-problem-middleware';
-import ApiProblem, { ApiProblemOptionsType } from '../lib/api-problem';
+import { ApiProblem, ApiProblemOptionsType, ExpressProblemMiddleware } from '../lib';
 
 describe('middleware', () => {
   let res: Response;

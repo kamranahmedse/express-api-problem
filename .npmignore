@@ -1,6 +1,10 @@
+.idea
 lib
 .gitignore
 .editorconfig
 tsconfig.json
 tests
-.idea
+.prettierignore
+.prettierrc
+.travis.yml
+jest.config.js

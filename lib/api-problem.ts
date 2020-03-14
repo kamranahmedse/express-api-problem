@@ -12,7 +12,7 @@ export type ApiProblemOptionsType = {
 
 export type SpecErrorType = Omit<ApiProblemOptionsType, 'additional'> & Record<string, any>;
 
-class ApiProblem extends Error {
+export class ApiProblem extends Error {
   status: number;
   title?: string;
   detail?: string | FormattedErrorType[];
@@ -31,5 +31,3 @@ class ApiProblem extends Error {
     Object.assign(this, props.additional);
   }
 }
-
-export default ApiProblem;
