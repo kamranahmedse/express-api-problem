@@ -7,12 +7,20 @@ import ApiProblem, { IApiProblem } from './api-problem';
 export type FormattedErrorType = {
   field: string;
   message: string;
-}
+};
 
-type MongoErrorHandler = (err: MongoError, doc: MongooseDocument, next: NextFunction) => void;
+type MongoErrorHandler = (
+  err: MongoError,
+  doc: MongooseDocument,
+  next: NextFunction,
+) => void;
 
 export function getErrorHandler(options: IApiProblem = {}): MongoErrorHandler {
-  function validationErrorHandler(err: MongoError, doc: MongooseDocument, next: NextFunction): void {
+  function validationErrorHandler(
+    err: MongoError,
+    doc: MongooseDocument,
+    next: NextFunction,
+  ): void {
     if (err.name !== 'ValidationError') {
       return next(err);
     }
@@ -24,16 +32,18 @@ export function getErrorHandler(options: IApiProblem = {}): MongoErrorHandler {
     for (const error in typedError.errors) {
       formattedErrors.push({
         field: typedError.errors[error].path,
-        message: typedError.errors[error].message
+        message: typedError.errors[error].message,
       });
     }
 
-    next(new ApiProblem({
-      status: options.status || UNPROCESSABLE_ENTITY,
-      title: options.title || 'Validation Failed',
-      ...options,
-      description: formattedErrors
-    }));
+    next(
+      new ApiProblem({
+        status: options.status || UNPROCESSABLE_ENTITY,
+        title: options.title || 'Validation Failed',
+        ...options,
+        description: formattedErrors,
+      }),
+    );
   }
 
   return validationErrorHandler;

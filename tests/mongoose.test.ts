@@ -1,10 +1,12 @@
-import MongooseProblemPlugin, { getErrorHandler } from '../lib/mongoose-problem-plugin';
+import MongooseProblemPlugin, {
+  getErrorHandler,
+} from '../lib/mongoose-problem-plugin';
 import { MongooseDocument, Schema } from 'mongoose';
 import { MongoError } from 'mongodb';
 import { NextFunction } from 'express';
 import ApiProblem from '../lib/api-problem';
 
-describe('MongooseProblemPlugin', function () {
+describe('MongooseProblemPlugin', function() {
   it('should set up the hook to handle validation errors', () => {
     const schema: Schema = {} as any;
     schema.post = jest.fn();
@@ -34,28 +36,30 @@ describe('MongooseProblemPlugin', function () {
     const error: MongoError = {
       name: 'ValidationError',
       errors: {
-        'username': {
+        username: {
           path: 'username',
-          message: 'Username must be unique'
+          message: 'Username must be unique',
         },
-        'age': {
+        age: {
           path: 'age',
-          message: 'Age must be a number'
-        }
-      }
+          message: 'Age must be a number',
+        },
+      },
     } as any;
     const doc: MongooseDocument = {} as any;
-    const next: NextFunction = jest.fn((error) => {
+    const next: NextFunction = jest.fn(error => {
       expect(error).toBeInstanceOf(ApiProblem);
-      expect(JSON.stringify(error)).toEqual(JSON.stringify({
-        status: 422,
-        title: 'Validation Failed',
-        description: [
-          { field: 'username', message: 'Username must be unique' },
-          { field: 'age', message: 'Age must be a number' }
-        ],
-        type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
-      }));
+      expect(JSON.stringify(error)).toEqual(
+        JSON.stringify({
+          status: 422,
+          title: 'Validation Failed',
+          description: [
+            { field: 'username', message: 'Username must be unique' },
+            { field: 'age', message: 'Age must be a number' },
+          ],
+          type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
+        }),
+      );
     }) as any;
 
     handler(error, doc, next);

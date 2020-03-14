@@ -22,7 +22,8 @@ class ApiProblem extends Error implements IApiProblem {
     this.status = props.status || INTERNAL_SERVER_ERROR;
     this.title = props.title || getStatusText(this.status);
     this.description = props.description;
-    this.type = props?.type || 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
+    this.type =
+      props?.type || 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
     this.additional = props.additional;
   }
 }

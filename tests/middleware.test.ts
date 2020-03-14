@@ -15,7 +15,7 @@ describe('middleware', () => {
     res = {
       header: resHeader,
       status: resStatus,
-      json: resJson
+      json: resJson,
     } as any;
 
     resJson.mockImplementation(() => res);
@@ -26,24 +26,20 @@ describe('middleware', () => {
   beforeAll(setUpExpressMocks);
   afterEach(() => jest.clearAllMocks());
 
-  it.each([
-    [undefined],
-    [null],
-    [false],
-    [{}],
-    [{ value: 'some' }],
-    [4]
-  ])('should ignore any non errors and call next', (errorParam: any) => {
-    const req: Request = jest.fn() as any;
-    const res: Response = jest.fn() as any;
-    const next: NextFunction = jest.fn() as any;
+  it.each([[undefined], [null], [false], [{}], [{ value: 'some' }], [4]])(
+    'should ignore any non errors and call next',
+    (errorParam: any) => {
+      const req: Request = jest.fn() as any;
+      const res: Response = jest.fn() as any;
+      const next: NextFunction = jest.fn() as any;
 
-    ExpressProblemMiddleware()(errorParam, req, res, next);
+      ExpressProblemMiddleware()(errorParam, req, res, next);
 
-    expect(req).not.toHaveBeenCalled();
-    expect(res).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledTimes(1);
-  });
+      expect(req).not.toHaveBeenCalled();
+      expect(res).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalledTimes(1);
+    },
+  );
 
   it('should respond with API problem response for ApiProblem', () => {
     const req: Request = jest.fn() as any;
@@ -54,7 +50,7 @@ describe('middleware', () => {
       title: 'Bad Request',
       description: 'Some bad request',
       type: 'Some type',
-      additional: {}
+      additional: {},
     };
 
     ExpressProblemMiddleware()(new ApiProblem(problemParams), req, res, next);
@@ -65,7 +61,10 @@ describe('middleware', () => {
     expect(resStatus).toHaveBeenCalledTimes(1);
     expect(resJson).toHaveBeenCalledTimes(1);
 
-    expect(resHeader).toHaveBeenCalledWith('Content-Type', 'application/problem+json');
+    expect(resHeader).toHaveBeenCalledWith(
+      'Content-Type',
+      'application/problem+json',
+    );
     expect(resStatus).toHaveBeenCalledWith(400);
     expect(resJson).toHaveBeenCalledWith(JSON.stringify(problemParams));
   });
@@ -78,10 +77,15 @@ describe('middleware', () => {
       status: 500,
       title: 'Server Error',
       description: 'Database connection failed',
-      type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
+      type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
     };
 
-    ExpressProblemMiddleware({ stackTrace: false })(new Error('Database connection failed'), req, res, next);
+    ExpressProblemMiddleware({ stackTrace: false })(
+      new Error('Database connection failed'),
+      req,
+      res,
+      next,
+    );
 
     expect(next).not.toHaveBeenCalled();
 
@@ -89,7 +93,10 @@ describe('middleware', () => {
     expect(resStatus).toHaveBeenCalledTimes(1);
     expect(resJson).toHaveBeenCalledTimes(1);
 
-    expect(resHeader).toHaveBeenCalledWith('Content-Type', 'application/problem+json');
+    expect(resHeader).toHaveBeenCalledWith(
+      'Content-Type',
+      'application/problem+json',
+    );
     expect(resStatus).toHaveBeenCalledWith(500);
     expect(resJson).toHaveBeenCalledWith(JSON.stringify(problemParams));
   });
@@ -100,7 +107,7 @@ describe('middleware', () => {
 
     ExpressProblemMiddleware({
       stackTrace: true,
-      contentType: 'some-content-type'
+      contentType: 'some-content-type',
     })(new Error('Database connection failed'), req, res, next);
 
     expect(next).not.toHaveBeenCalled();
@@ -114,9 +121,17 @@ describe('middleware', () => {
 
     // Because we have the stack trace enabled, we can't have the exact "expect" match
     // @todo write custom matcher and match the object format without stack
-    expect(resJson).toHaveBeenCalledWith(expect.stringContaining('Database connection failed'));
-    expect(resJson).toHaveBeenCalledWith(expect.stringContaining('Server Error'));
-    expect(resJson).toHaveBeenCalledWith(expect.stringContaining('https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'));
+    expect(resJson).toHaveBeenCalledWith(
+      expect.stringContaining('Database connection failed'),
+    );
+    expect(resJson).toHaveBeenCalledWith(
+      expect.stringContaining('Server Error'),
+    );
+    expect(resJson).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html',
+      ),
+    );
     expect(resJson).toHaveBeenCalledWith(expect.stringContaining('500'));
   });
 });

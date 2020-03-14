@@ -3,22 +3,26 @@ import { NextFunction, Request, Response } from 'express';
 import { ErrorRequestHandler } from 'express-serve-static-core';
 import ApiProblem from './api-problem';
 
-type MiddlewareOptionsType = { stackTrace?: boolean; contentType?: string; };
-type ExpressProblemMiddlewareType = (options?: MiddlewareOptionsType) => ErrorRequestHandler
+type MiddlewareOptionsType = { stackTrace?: boolean; contentType?: string };
+type ExpressProblemMiddlewareType = (
+  options?: MiddlewareOptionsType,
+) => ErrorRequestHandler;
 
-const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function (options: MiddlewareOptionsType = {}): ErrorRequestHandler {
-
+const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
+  options: MiddlewareOptionsType = {},
+): ErrorRequestHandler {
   // Merge the options with defaults
   options = {
     stackTrace: true,
     contentType: 'application/problem+json',
-    ...options
+    ...options,
   };
 
-  return function (err: any, req: Request, res: Response, next: NextFunction) {
+  return function(err: any, req: Request, res: Response, next: NextFunction) {
     // For API problems, just respond with the error
     if (err instanceof ApiProblem) {
-      res.status(err.status)
+      res
+        .status(err.status)
         .header('Content-Type', options.contentType)
         .json(JSON.stringify(err));
 
@@ -30,12 +34,15 @@ const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function (options
       const error: ApiProblem = new ApiProblem({
         status: INTERNAL_SERVER_ERROR,
         description: err.message,
-        additional: (options.stackTrace ? {
-          stack: err?.stack || undefined
-        } : undefined)
+        additional: options.stackTrace
+          ? {
+              stack: err?.stack || undefined,
+            }
+          : undefined,
       });
 
-      res.status(error.status)
+      res
+        .status(error.status)
         .header('Content-Type', options.contentType)
         .json(JSON.stringify(error));
 
