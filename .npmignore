@@ -1,0 +1,5 @@
+lib
+.gitignore
+.editorconfig
+tsconfig.json
+tests

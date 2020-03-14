@@ -2,7 +2,13 @@
   "name": "express-api-problem",
   "version": "1.2.6",
   "description": "A minimal package to assist in returning RESTful exceptions in your APIs",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "url": "http://github.com/kamranahmedse/express-api-problem",
     "type": "git"
@@ -20,6 +26,13 @@
   "author": "Kamran Ahmed <kamranahmed.se@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "http-status-codes": "^1.0.6"
+    "@types/mongodb": "^3.5.2",
+    "http-status-codes": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.3",
+    "@types/mongoose": "^5.7.6",
+    "@types/node": "^13.9.1",
+    "typescript": "^3.8.3"
   }
 }
