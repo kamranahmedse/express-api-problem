@@ -1,5 +1,9 @@
 # express-api-problem
 
+![](https://img.shields.io/travis/kamranahmedse/express-api-problem/master.svg?style=flat-square)
+![](https://img.shields.io/codecov/c/github/kamranahmedse/express-api-problem.svg?style=flat-square)
+![](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)
+
 > Automatically turns your thrown exceptions to the JSON response while conforming to API problem specification
 
 An express package that lets you handle the API problems with ease. It provides a straightforward implementation of [IETF Problem Specification](https://tools.ietf.org/html/draft-nottingham-http-problem-07) and turns your thrown exceptions to be returned in the below format with the header of content type set to `application/problem+json`
