@@ -1,15 +1,15 @@
 import ApiProblem, { IApiProblem } from './api-problem';
-import { Error, MongooseDocument, NativeError, Schema } from 'mongoose';
+import { Error, MongooseDocument, Schema } from 'mongoose';
 import { UNPROCESSABLE_ENTITY } from 'http-status-codes';
 import { MongoError } from 'mongodb';
 import { NextFunction } from 'express';
 
-type FormattedErrorType = {
+export type FormattedErrorType = {
   field: string;
   message: string;
 }
 
-function MongooseProblemPlugin (schema: Schema, options: IApiProblem) {
+function MongooseProblemPlugin(schema: Schema, options: IApiProblem = {}) {
   function validationErrorHandler(err: MongoError, doc: MongooseDocument, next: NextFunction): void {
     if (err.name !== 'ValidationError') {
       return next(err);

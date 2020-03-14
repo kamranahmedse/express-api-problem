@@ -5,11 +5,11 @@ import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 
 const contentType: string = 'application/problem+json';
 
-const ProblemMiddleware: ErrorRequestHandler = function (err: any, req: Request, res: Response, next: NextFunction) {
+const ExpressProblemMiddleware: ErrorRequestHandler = function (err: any, req: Request, res: Response, next: NextFunction) {
   if (err instanceof ApiProblem) {
     res.status(err.status)
       .header('Content-Type', contentType)
-      .send(JSON.stringify(err));
+      .json(JSON.stringify(err));
   } else if (err instanceof Error) {
     const error: ApiProblem = new ApiProblem({
       status: INTERNAL_SERVER_ERROR,
@@ -20,10 +20,10 @@ const ProblemMiddleware: ErrorRequestHandler = function (err: any, req: Request,
 
     res.status(error.status)
       .header('Content-Type', contentType)
-      .send(JSON.stringify(error));
+      .json(JSON.stringify(error));
   } else {
     next();
   }
 };
 
-export default ProblemMiddleware;
+export default ExpressProblemMiddleware;

@@ -1,9 +1,10 @@
 import { getStatusText, INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import { FormattedErrorType } from './mongoose-problem-plugin';
 
 export interface IApiProblem {
   status?: number;
   title?: string;
-  description?: string;
+  description?: string | FormattedErrorType[];
   additional?: Record<string, any>;
   type?: string;
 }
@@ -11,7 +12,7 @@ export interface IApiProblem {
 class ApiProblem extends Error implements IApiProblem {
   status: number;
   title?: string;
-  description?: string;
+  description?: string | FormattedErrorType[];
   additional?: Record<string, any>;
   type?: string;
 
