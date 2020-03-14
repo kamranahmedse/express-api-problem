@@ -8,3 +8,6 @@ node_js:
   - "stable"
 before_script:
   - npm install
+env:
+  # You did not see this 🤫
+  - CODECOV_TOKEN="2bebc19f-0528-4fa7-8279-3f3b7c4997b9"
