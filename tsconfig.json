@@ -9,5 +9,13 @@
     "typeRoots": [
       "./node_modules/@types"
     ]
-  }
+  },
+  "include": [
+    "lib"
+  ],
+  "exclude": [
+    "dist",
+    "tests",
+    "node_modules"
+  ]
 }

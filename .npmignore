@@ -3,3 +3,4 @@ lib
 .editorconfig
 tsconfig.json
 tests
+.idea
