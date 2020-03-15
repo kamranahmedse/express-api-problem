@@ -1,21 +1,21 @@
 import { MongooseDocument, Schema } from 'mongoose';
 import { MongoError } from 'mongodb';
 import { NextFunction } from 'express';
-import { ApiProblem, getMongooseErrorHandler, MongooseProblemPlugin } from '../lib';
+import { ApiProblem, getErrorHandler, MongoosePlugin } from '../lib';
 
 describe('MongooseProblemPlugin', function() {
   it('should set up the hook to handle validation errors', () => {
     const schema: Schema = {} as any;
     schema.post = jest.fn();
 
-    MongooseProblemPlugin(schema);
+    MongoosePlugin(schema);
 
     expect(schema.post).toHaveBeenCalledTimes(1);
     expect(schema.post).toHaveBeenCalledWith('save', expect.any(Function));
   });
 
   it('should ignore non-validation errors', () => {
-    const handler = getMongooseErrorHandler();
+    const handler = getErrorHandler();
 
     const error: MongoError = { name: 'non-validation' } as any;
     const doc: MongooseDocument = {} as any;
@@ -28,7 +28,7 @@ describe('MongooseProblemPlugin', function() {
   });
 
   it('should generate api-problem for validation errors', () => {
-    const handler = getMongooseErrorHandler();
+    const handler = getErrorHandler();
 
     const error: MongoError = {
       name: 'ValidationError',

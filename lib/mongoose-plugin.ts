@@ -15,7 +15,7 @@ type MongoErrorHandler = (
   next: NextFunction,
 ) => void;
 
-export function getMongooseErrorHandler(
+export function getErrorHandler(
   options: ApiProblemOptionsType = {},
 ): MongoErrorHandler {
   function validationErrorHandler(
@@ -51,9 +51,9 @@ export function getMongooseErrorHandler(
   return validationErrorHandler;
 }
 
-export function MongooseProblemPlugin(
+export function MongoosePlugin(
   schema: Schema,
   options: ApiProblemOptionsType = {},
 ) {
-  schema.post('save', getMongooseErrorHandler(options));
+  schema.post('save', getErrorHandler(options));
 }

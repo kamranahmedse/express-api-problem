@@ -8,7 +8,7 @@ type ExpressProblemMiddlewareType = (
   options?: MiddlewareOptionsType,
 ) => ErrorRequestHandler;
 
-export const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
+export const ExpressMiddleware: ExpressProblemMiddlewareType = function(
   options: MiddlewareOptionsType = {},
 ): ErrorRequestHandler {
   // Merge the options with defaults
@@ -44,7 +44,7 @@ export const ExpressProblemMiddleware: ExpressProblemMiddlewareType = function(
       res
         .status(error.status)
         .header('Content-Type', options.contentType)
-        .json(JSON.stringify(error));
+        .json(error);
 
       return;
     }

@@ -1,5 +1,5 @@
 import { getStatusText, INTERNAL_SERVER_ERROR } from 'http-status-codes';
-import { FormattedErrorType } from './mongoose-problem-plugin';
+import { FormattedErrorType } from './mongoose-plugin';
 
 export type ApiProblemOptionsType = {
   status?: number;

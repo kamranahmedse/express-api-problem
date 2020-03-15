@@ -1,3 +1,3 @@
 export * from './api-problem';
-export * from './express-problem-middleware';
-export * from './mongoose-problem-plugin';
+export * from './express-middleware';
+export * from './mongoose-plugin';

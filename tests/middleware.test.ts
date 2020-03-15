@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ApiProblem, ApiProblemOptionsType, ExpressProblemMiddleware } from '../lib';
+import { ApiProblem, ApiProblemOptionsType, ExpressMiddleware } from '../lib';
 
 describe('middleware', () => {
   let res: Response;
@@ -32,7 +32,7 @@ describe('middleware', () => {
       const res: Response = jest.fn() as any;
       const next: NextFunction = jest.fn() as any;
 
-      ExpressProblemMiddleware()(errorParam, req, res, next);
+      ExpressMiddleware()(errorParam, req, res, next);
 
       expect(req).not.toHaveBeenCalled();
       expect(res).not.toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe('middleware', () => {
       },
     };
 
-    ExpressProblemMiddleware()(new ApiProblem(problemParams), req, res, next);
+    ExpressMiddleware()(new ApiProblem(problemParams), req, res, next);
 
     expect(next).not.toHaveBeenCalled();
 
@@ -86,7 +86,7 @@ describe('middleware', () => {
       detail: 'Database connection failed',
     };
 
-    ExpressProblemMiddleware({ stackTrace: false })(
+    ExpressMiddleware({ stackTrace: false })(
       new Error('Database connection failed'),
       req,
       res,
@@ -111,7 +111,7 @@ describe('middleware', () => {
     const req: Request = jest.fn() as any;
     const next: NextFunction = jest.fn() as any;
 
-    ExpressProblemMiddleware({
+    ExpressMiddleware({
       stackTrace: true,
       contentType: 'some-content-type',
     })(new Error('Database connection failed'), req, res, next);
