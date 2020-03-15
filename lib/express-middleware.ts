@@ -1,5 +1,5 @@
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
-import { NextFunction, Request, Response } from 'express';
+import { json, NextFunction, Request, Response } from 'express';
 import { ErrorRequestHandler } from 'express-serve-static-core';
 import { ApiProblem } from './api-problem';
 
@@ -24,7 +24,7 @@ export const ExpressMiddleware: ExpressProblemMiddlewareType = function(
       res
         .status(err.status)
         .header('Content-Type', options.contentType)
-        .json(JSON.stringify(err));
+        .send(JSON.stringify(err));
 
       return;
     }
@@ -44,7 +44,7 @@ export const ExpressMiddleware: ExpressProblemMiddlewareType = function(
       res
         .status(error.status)
         .header('Content-Type', options.contentType)
-        .json(error);
+        .send(JSON.stringify(error));
 
       return;
     }

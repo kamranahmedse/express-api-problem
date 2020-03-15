@@ -5,19 +5,19 @@ describe('middleware', () => {
   let res: Response;
   let resHeader: jest.Mock;
   let resStatus: jest.Mock;
-  let resJson: jest.Mock;
+  let resSend: jest.Mock;
 
   function setUpExpressMocks() {
-    resJson = jest.fn();
+    resSend = jest.fn();
     resStatus = jest.fn();
     resHeader = jest.fn();
     res = {
       header: resHeader,
       status: resStatus,
-      json: resJson,
+      send: resSend,
     } as any;
 
-    resJson.mockImplementation(() => res);
+    resSend.mockImplementation(() => res);
     resStatus.mockImplementation(() => res);
     resHeader.mockImplementation(() => res);
   }
@@ -60,14 +60,14 @@ describe('middleware', () => {
 
     expect(resHeader).toHaveBeenCalledTimes(1);
     expect(resStatus).toHaveBeenCalledTimes(1);
-    expect(resJson).toHaveBeenCalledTimes(1);
+    expect(resSend).toHaveBeenCalledTimes(1);
 
     expect(resHeader).toHaveBeenCalledWith(
       'Content-Type',
       'application/problem+json',
     );
     expect(resStatus).toHaveBeenCalledWith(400);
-    expect(resJson).toHaveBeenCalledWith(
+    expect(resSend).toHaveBeenCalledWith(
       JSON.stringify({
         ...problemParams,
         additional: undefined,
@@ -97,14 +97,14 @@ describe('middleware', () => {
 
     expect(resHeader).toHaveBeenCalledTimes(1);
     expect(resStatus).toHaveBeenCalledTimes(1);
-    expect(resJson).toHaveBeenCalledTimes(1);
+    expect(resSend).toHaveBeenCalledTimes(1);
 
     expect(resHeader).toHaveBeenCalledWith(
       'Content-Type',
       'application/problem+json',
     );
     expect(resStatus).toHaveBeenCalledWith(500);
-    expect(resJson).toHaveBeenCalledWith(JSON.stringify(problemParams));
+    expect(resSend).toHaveBeenCalledWith(JSON.stringify(problemParams));
   });
 
   it('should honor the options passed', () => {
@@ -120,19 +120,19 @@ describe('middleware', () => {
 
     expect(resHeader).toHaveBeenCalledTimes(1);
     expect(resStatus).toHaveBeenCalledTimes(1);
-    expect(resJson).toHaveBeenCalledTimes(1);
+    expect(resSend).toHaveBeenCalledTimes(1);
 
     expect(resHeader).toHaveBeenCalledWith('Content-Type', 'some-content-type');
     expect(resStatus).toHaveBeenCalledWith(500);
 
     // Because we have the stack trace enabled, we can't have the exact "expect" match
     // @todo write custom matcher and match the object format without stack
-    expect(resJson).toHaveBeenCalledWith(
+    expect(resSend).toHaveBeenCalledWith(
       expect.stringContaining('Database connection failed'),
     );
-    expect(resJson).toHaveBeenCalledWith(
+    expect(resSend).toHaveBeenCalledWith(
       expect.stringContaining('Server Error'),
     );
-    expect(resJson).toHaveBeenCalledWith(expect.stringContaining('500'));
+    expect(resSend).toHaveBeenCalledWith(expect.stringContaining('500'));
   });
 });
