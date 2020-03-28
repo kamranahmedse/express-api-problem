@@ -32,29 +32,59 @@ yarn add express-api-problem
 
 ## Usage
 
-Register the middleware
-```javascript
-var ApiProblemHandler = require('express-api-problem/middleware');
+Register the middleware in your server after the routes registration
 
-app.use(ApiProblemHandler);
+```javascript
+import { ExpressMiddleware as ErrorHandler } from 'express-api-problem';
+
+// Your routes
+
+app.use(ErrorHandler());
 ```
 
 Throw exceptions while instantiating `ApiProblem` having the following signature
 
 ```javascript
-var ApiProblem = require('express-api-problem');
+import { ApiProblem, FormattedErrorType } from 'express-api-problem';
 
-// statusCode : HTTP status code to be returned
-// title : Title in response
-// description : Description of the exception
-// additionalDetail : Object having any additional detail that you may want to send
-throw new ApiProblem(statusCode, title, description, additionalDetail);
+// status (required): HTTP status code to be returned
+// title (optional): Title in response
+// detail (optional): Description of the exception or 
+// additional (optional): Object having any additional detail that you may want to send in response
+throw new ApiProblem({
+  status: 400,
+  title: 'Validation Failed',
+  detail: 'Invalid username or password given',
+  type: '2882',
+  instance: 'http://some.url/for/details',
+});
+
+// or call `next` with an instance of ApiProblem
+next(new ApiProblem({
+  status: 400,
+  title: 'Insufficient Balance',
+  detail: 'You do not have enough balance to purchase the product',
+  additional: {
+    available_balance: 'USD 2000',
+    required_balance: 'USD 12422',
+  },
+}));
+
+// Will return the below JSON with 400 status code and below response
+// {
+//   status: 400,
+//   title: 'Insufficient Balance',
+//   detail: 'You do not have enough balance to purchase the product',
+//   available_balance: 'USD 2000',
+//   required_balance: 'USD 12422',
+// }
+
 ```
 
 Add the mongoose plugin to automatically transform your model validation errors to API Problem
 
 ```javascript
-var mongooseValidator = require('express-api-problem/mongoose-validator');
+import { MongoosePlugin as ApiProblemPlugin } from 'express-api-problem/mongoose-plugin';
 
 // Will transform any validation exceptions thrown by your model to
 //
@@ -73,86 +103,88 @@ var mongooseValidator = require('express-api-problem/mongoose-validator');
 //     ]
 // }
 //
-yourSchema.plugin(mongooseValidator);
-
-// Also you can modify the status code and title if required
-yourSchema.plugin(mongooseValidator, {
-    status: 400,
-    title: "Look before you submit!"
+yourSchema.plugin(ApiProblemPlugin, {
+  status: 422, // Defaults to 422, you can override here
+  title: "Validation Failed", // Defaults to "Validation Failed", you can override here
+  instance: null, // Add string value if any
+  additional: {}, // Add more details if any
+  type: "", // Add type information if any
 });
-
-// which will result in
-//  {
-//     status: 400,
-//     title: "Look before you submit!",
-//     detail: [
-//        {
-//          field: "title",
-//          message: "Title must be unique"
-//        },
-//        {
-//          field: "expiryDate",
-//          message: "Expiry Date must be a valid date"
-//        }
-//     ]
-// }
 ```
 
 ## Examples
 
 Throwing exception using only status code
 ```javascript
-throw new ApiProblem(400);
+throw new ApiProblem();
 
 // {
-//    status: 400,
-//    title: 'Bad Request',
-//    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
+//    status: 500,
+//    title: 'Internal Server Error',
+//    stacktrace: "",   // if enabled while registering the middleware
 // }
 ```
 Providing description string
 ```javascript
-throw new ApiProblem(404, 'User not found', 'No user found against the given ID: 10');
+throw new ApiProblem({
+  status: 400,
+  title: 'An Error',
+  detail: 'An Error Occurred',
+  type: 'some error',
+  instance: 'http://some/url',
+});
 
 // {
-//    status: 404,
-//    title: 'User not found',
-//    detail: 'No user found against the given ID: 10',
-//    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
+//   status: 404,
+//   title: 'User not found',
+//   detail: 'No user found against the given ID: 10',
+//   type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
 ````
-Using object in description
+
+Providing error format in the form of field and messages
 
 ```javascript
-throw new ApiProblem(400, 'Validation failed', {
-    name: 'Name field is required',
-    email: 'Invalid email given'
+throw new ApiProblem({
+  status: 400,
+  title: 'An Error',
+  detail: [{"field": "some_field", "message": "Some validation message"}],
+  type: 'some error',
+  instance: 'http://some/url',
 });
 
 // {
-//    status: 422,
-//    title: 'Unprocessable entity',
-//    detail: {
-//      name: ..
-//      email: ..
-//    },
-//    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
+//   status: 404,
+//   title: 'User not found',
+//   detail: [
+//     {
+//       "field": "some_field", 
+//       "message": "Some validation message"
+//     }
+//   ],
+//   type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
 // }
 ```
-Adding additional detail to response
+
+Attaching more details
+
 ```javascript
-throw new ApiProblem(400, 'Insufficient Balance', 'You do not have enough balance to purchase the product', {
-  available_balance: 'USD 2000',
-  required_balance: 'USD 12422'
+throw new ApiProblem({
+  status: 500,
+  title: 'Non existing additional data',
+  detail: 'An Error Occurred',
+  type: 'some error',
+  additional: {
+    'more': 'nested values',
+  },
 });
 
 // {
-//    status: 400,
-//    title: 'Insufficient Balance',
-//    detail: 'You do not have enough balance to purchase the product',
-//    available_balance: 'USD 2000',
-//    required_balance: 'USD 12422',
-//    type: 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'
+//  status: 500,
+//  title: 'Non existing additional data',
+//  detail: 'An Error Occurred',
+//  type: 'some error',
+//  more: 'nested values',
 // }
 ```
 
